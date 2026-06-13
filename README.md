@@ -1,6 +1,6 @@
-# 🎛️ Ableton Session Intelligence Engine (H.O.R.N. Stack)
+# 🎛️ Ableton Session Intelligence & Web Intelligence Engine (H.O.R.N. Stack)
 
-A forensic-grade, local-first metadata tracking and session intelligence layer for Ableton Live. This engine automatically intercepts compressed `.als` project XML graphs, flushes them into zero-copy Apache Arrow buffers, caches them inside a structured Parquet/DuckDB lakehouse, and uses local hardware-muzzled LLMs to reason over session state histories.
+A forensic-grade, local-first session intelligence, audio mastering, and web metadata consolidation engine for Ableton Live projects and digital DSP audio processing. This project implements a **3-Lane Delta Architecture** using **PyArrow + Parquet + DuckDB** for the relational data lakehouse, and **LanceDB** for vector embeddings. The intelligence layer is powered by offline hardware-muzzled LLMs (via Ollama) and cloud-grade models (via the Antigravity SDK) for comprehensive side-by-side Neural A&R profiling.
 
 ---
 
@@ -13,83 +13,149 @@ A forensic-grade, local-first metadata tracking and session intelligence layer f
 
 ---
 
-##  Repository File Architecture
+## 🏗️ 3-Lane Delta Architecture
 
-*   `main.py`: Entry point for launching the local ASGI web service.
-*   `pyproject.toml`: Explicit dependency specifications and lock parameters for Python 3.13.
-*   `app/config.py`: Environment variable and file storage route controller managed via `pydantic-settings`.
-*   `app/extractor.py`: High-performance Gzip-to-Arrow binary unpacker layer.
-*   `app/database.py`: Embedded DuckDB OLAP file querying engine.
-*   `app/schemas.py`: Pydantic V2 data model definitions managing your 3 explicit Data Lanes.
-*   `app/api.py`: FastAPI server exposing the network endpoints to your local IDE or language servers.
-*   `app/templates/`: Isolated directory mapping prompt files away from core logical code frames.
+The pipeline processes multi-source API metadata, physical track arrangements, and audio DSP characteristics across three strictly separated lanes:
+
+```
+                  ┌──────────────────────────────────────────────┐
+                  │          Raw Multi-Source Ingestion          │
+                  │   (Spotify, iTunes, MusicBrainz, Discogs)    │
+                  └──────────────────────┬───────────────────────┘
+                                         │
+                                         ▼ (PyArrow / Columnar Parquet)
+┌─────────────────────────────────────────────────────────────────────────────────────────┐
+│                                 3-LANE DELTA FRAMEWORK                                  │
+├────────────────────────────────────────────────├────────────────────────────────────────┤
+│ Lane 1: DuckDB Relational Lakehouse (Physical) │ Lane 2: LanceDB Vector Database        │
+│   - Raw API tables                             │   - 1024-dim Snowflake Arctic Embeds   │
+│   - Physical DSP audio features                │   - Full schema metadata filtering     │
+├────────────────────────────────────────────────┴────────────────────────────────────────┤
+│ Lane 3: H.O.R.N. Logs (Structured Audit Trail)                                          │
+└────────────────────────────────────────┬────────────────────────────────────────────────┘
+                                         │
+                                         ▼
+                        ┌─────────────────────────────────┐
+                        │    Pydantic Fusion Firewall     │
+                        │    (Deterministic Consensus)    │
+                        └────────────────┬────────────────┘
+                                         │
+                                         ▼
+                 ┌───────────────────────┴───────────────────────┐
+                 │                                               │
+                 ▼                                               ▼
+      [Local Gemma via Ollama]                     [Cloud Gemini via Antigravity]
+      - Zero-egress local node                     - High-capacity A/B testing
+```
+
+| Lane | Store / Mechanism | Purpose |
+| :--- | :--- | :--- |
+| **Lane 1** | DuckDB (Physical WebDB) | Houses immutable raw tables loaded natively via PyArrow from Parquet cold storage. Holds physical audio features (`dsp_rms`, `dsp_crest`, `dsp_sub`, etc.) and chart streams. |
+| **Lane 2** | LanceDB (VectorDB) | Embedded vector store holding 1024-dimensional Snowflake Arctic embeddings. Built with a rich metadata schema to support complex vector searches filtering on physical DSP parameters. |
+| **Lane 3** | H.O.R.N. Audits | Relational database containing detailed system execution metrics, execution times, and pipeline state logs. |
 
 ---
 
-##  Instant Zero-Configuration Installation
+## ⚡ High-Performance Lakehouse Ingestion (PyArrow + Parquet)
 
-This project requires **Python 3.13+** and a running local instance of **Ollama** (with the `phi3` model pulled).
+To process massive audio datasets efficiently, the ingestion layer is built entirely on **PyArrow** and **Parquet**:
+1. **Columnar Conversion**: Raw JSON arrays (containing thousands of physical DSP audio features) are loaded and structured into memory using PyArrow Tables.
+2. **Parquet Cold Storage**: Data is flushed to `.parquet` files utilizing dictionary encoding and Snappy compression.
+3. **DuckDB Direct Projection**: DuckDB queries and builds relational tables directly from the binary Parquet file using projection pushdowns:
+   ```sql
+   CREATE TABLE spotify_track_metrics AS 
+   SELECT * FROM read_parquet('lakehouse_data/audio_features.parquet');
+   ```
+This architecture processes ingest and indexing pipelines under **1 second** even on large datasets.
 
-### 1. Clone the Asset Repository
-```bash
-git clone https://github.com
-cd ableton-session-intelligence
+---
+
+## 🧬 Pydantic Data Fusion Engine
+
+Rather than passing raw, unstructured text to language models, this system implements a strict **Pydantic Fusion Firewall** (`WebDataFusionEngine`). This firewall takes multi-source inputs (Discogs JSON, Apple Music catalogs, Spotify charts, MusicBrainz releases) and resolves:
+* **Validated Artists**: Fuses artist collaborations into structured, unified strings.
+* **Taxonomy & Genre Consensus**: Resolves conflicting genres using hierarchy rules (e.g., favoring specific iTunes electronic genres over broad Discogs categories).
+* **ISRC Crossover**: Dynamically locates and binds the unique ISRC codes across tracks.
+
+---
+
+## 🧠 Neural A&R & Side-by-Side A/B Testing
+
+Once the metadata and physical audio DSP metrics are fused, the pipeline evaluates the track's performance using local and cloud language models:
+* **Context Injector**: The exact computed DSP characteristics (`dsp_rms`, `dsp_crest`, `dsp_sub`, `dsp_bass`, etc.) are structured alongside web performance metrics (popularity, listener counts, stream counts) and injected as pure variables into the prompts.
+* **Local Node (Ollama)**: Evaluates the relationship between the physical mix (e.g., high crest factor, heavy sub-bass energy) and web streams offline using `gemma:2b`.
+* **Cloud Node (Antigravity SDK / Google GenAI)**: Runs the identical context block against `gemini-3.5-flash` to evaluate local models vs. cloud reasoning capabilities side-by-side.
+
+---
+
+## 📁 Repository Directory Structure
+
+```
+├── ableton-session-intelligence/
+│   ├── app/                         # FastAPI application backend
+│   │   ├── api.py                   # REST endpoints exposing session data
+│   │   ├── config.py                # Environment configuration using pydantic-settings
+│   │   ├── database.py              # DuckDB database connectors and SQL executor
+│   │   ├── extractor.py             # Binary ALS parser and gzip XML unpacker
+│   │   ├── schemas.py               # Pydantic validation schemas
+│   │   └── templates/               # Prompt templates directory
+│   ├── exported_json/               # Raw DSP audio analysis exports (JSON formats)
+│   ├── lakehouse_data/              # PyArrow Parquet cold storage layer
+│   ├── lancedb_web_intel_rag/       # LanceDB vector database folder
+│   ├── build_web_intel_notebook.py  # Python script to build the web intelligence notebook
+│   ├── web_intel_pipeline.ipynb     # Interactive Jupyter notebook for the end-to-end pipeline
+│   ├── master_batch.py              # Batch processing script for audio mastering
+│   ├── main.py                      # Local web service launcher
+│   ├── pyproject.toml               # Poetry/UV dependency configuration
+│   └── requirements.txt             # Locked Python packages
 ```
 
-### 2. Isolate and Instantiate Your Virtual Environment
+---
+
+## 🚀 Installation & Execution
+
+### Prerequisites
+* **Python 3.13+**
+* **Ollama** running locally with the following models pulled:
+  ```bash
+  ollama pull gemma:2b
+  ollama pull snowflake-arctic-embed:latest
+  ```
+
+### 1. Environment Setup
+Clone the repository and set up a virtual environment:
 ```bash
 python -m venv .venv
+.venv\Scripts\activate      # Windows
+source .venv/bin/activate   # macOS/Linux
+pip install -r requirements.txt
 ```
-*   **Windows:** `.venv\Scripts\activate`
-*   **Mac/Linux:** `source .venv/bin/activate`
 
-### 3. Inject Strict Dependency Classes
+### 2. Configure Environment Variables
+Create a `.env` file in the root directory:
+```env
+SPOTIFY_CLIENT_ID=your_spotify_client_id
+SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+GEMINI_API_KEY=your_gemini_api_key
+```
+
+### 3. Build the Pipeline Notebook
+Generate the updated web intelligence notebook:
 ```bash
-pip install --upgrade pip
-pip install duckdb lancedb pyarrow pydantic pydantic-settings jinja2 fastapi uvicorn ollama torch
+python build_web_intel_notebook.py
 ```
 
----
-
-##  Execution Guide
-
-1.  Place your target Ableton Live project files (`.als`) into the `raw_sessions/` directory.
-2.  Boot up your local terminal and execute the primary runtime engine node:
-    ```bash
-    python main.py
-    ```
-3.  The engine will automatically scan the project files, index track attributes to local matching Parquet records, and spin up a local FastAPI server hosted at `http://127.0.0.1:8000`.
-
----
-
-## 🎛️ AI Audio Mastering & Pydantic DSP Pipeline
-
-This repository now features an end-to-end local Neural A&R and Audio Mastering engine:
-1. **Pydantic Delta Engine**: Intercepts unmastered `.wav` files and compares them against target profiles housed in `duckdb_audio_features.json`. It computes exactly calculated EQ & Dynamics deltas on the fly.
-2. **C++ DSP Rendering**: Utilizes `pedalboard` to physically alter the audio file dynamically based on the exact mathematics generated by the Pydantic Engine.
-3. **Hardware-Muzzled LLMs**: Pipes the massive Pydantic JSON structure directly into local 2B+ LLMs (e.g. `gemma:2b`) using Ollama, generating forensic psychoacoustic analysis and A&R feedback completely offline.
-4. **Batch Audio Mastering Engine**: Run automated mastering pipelines over lists of audio files (both `.wav` and `.mp3`) using the standalone script [master_batch.py](file:///C:/STUDIES_BACKUP/Legion-Jacked-Pipeline/ableton-session-intelligence/master_batch.py) or running **Cell 40** in the [headless_audio_processing-github.ipynb](file:///C:/STUDIES_BACKUP/Legion-Jacked-Pipeline/ableton-session-intelligence/headless_audio_processing-github.ipynb) notebook.
-
----
-
-## 🌐 Sovereign Edge Network (Tailscale + MCP)
-
-This pipeline completely bypasses public internet tunnels (e.g., ngrok) via a private, encrypted **Sovereign Edge** architecture:
-*   **Tailscale Mesh**: The local host is secured within an encrypted peer-to-peer WireGuard mesh (Tailnet). 
-*   **Local MCP Server**: We expose analytical tools and file contexts directly to approved endpoints over the **Model Context Protocol (MCP)**.
-*   **Zero Egress Multi-Cloud**: Cloud LLMs (e.g., Vertex AI, Gemini Pro) can securely ping the local Tailscale IP to act as agents over the local machine without ever exposing port data to the public internet.
+### 4. Execute the Pipeline In-Place
+Execute the pipeline using `nbconvert` to run all cells (including data ingestion, Pydantic fusion, LanceDB writing, and local/cloud LLM analysis) and write outputs directly to the notebook:
+```bash
+jupyter nbconvert --to notebook --execute web_intel_pipeline.ipynb --inplace
+```
 
 ---
 
 ## 🏗️ Professional Engineering Standards
 
-This repository is built to FAANG-grade production standards:
-*   **Automated Testing**: Pydantic schema validation executes automatically via `pytest`.
-*   **CI/CD Integration**: A GitHub Actions workflow (`.github/workflows/python-app.yml`) automatically triggers on every pull request to guarantee stability.
-*   **Linting & Typing**: Enforces aggressive code hygiene via `ruff` and strict static typing via `mypy`.
-*   **Pre-commit Hooks**: Automatic source code formatting via `.pre-commit-config.yaml`.
-
----
-
-## 🛡️ Commercial Licensing & Security Compliance
-This engine processes user file streams completely locally. It reads user-generated XML data configurations and does not reverse-engineer, alter, or disassemble closed-source Ableton Live application binaries, making it fully compliant with standard software interoperability regulations.
+*   **Continuous Integration**: GitHub Actions configuration (`.github/workflows/python-app.yml`) running automated test checks.
+*   **Static Type Checking & Linting**: Strictly compliant with `mypy` and formatted via `ruff`.
+*   **Pre-commit Validation**: Enforced via hooks in `.pre-commit-config.yaml` to ensure clean, PEP8 compliant code blocks before commits.
+*   **Interoperability**: Completely compliant with Ableton Live files using native parsing libraries, requiring no external binary injection.
