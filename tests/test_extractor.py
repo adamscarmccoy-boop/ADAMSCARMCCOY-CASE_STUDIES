@@ -1,5 +1,7 @@
 import pytest
+
 from app.schemas import Lane1DuckDBAnalytics
+
 
 def test_duckdb_analytics_schema():
     """Verify that the Lane1DuckDBAnalytics Pydantic model enforces required fields correctly."""

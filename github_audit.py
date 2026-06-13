@@ -1,6 +1,7 @@
-import httpx
-import sys
 import base64
+import sys
+
+import httpx
 
 sys.stdout.reconfigure(encoding='utf-8')
 

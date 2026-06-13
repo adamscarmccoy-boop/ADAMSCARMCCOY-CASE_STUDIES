@@ -1,11 +1,12 @@
+import logging
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import logging
 
 logger = logging.getLogger(__name__)
 
-from app.extractor import extract_and_index_session
 from app.database import analyze_session_with_phi3
+from app.extractor import extract_and_index_session
 
 app = FastAPI(
     title="Ableton Session Intelligence Node",

@@ -1,7 +1,9 @@
 import os
 from pathlib import Path
 from typing import Literal
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
 
 class ProductionEngineSettings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="SESSION_INTEL_", extra="ignore")
