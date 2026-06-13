@@ -1,6 +1,8 @@
+from typing import List, Literal
+
 import pydantic
-from typing import Literal, List
 from pydantic import BaseModel, Field
+
 
 # --- THE THREE EXPLICIT SYSTEM DATA LANES ---
 class Lane1DuckDBAnalytics(BaseModel):

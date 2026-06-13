@@ -1,0 +1,3 @@
+## 2024-06-25 - Python inner-loop lookup optimization in app/extractor.py
+**Learning:** Found a nested loop O(N^2) anti-pattern inside `extract_and_index_session` when checking list membership `if filename not in sample_files:` along with a nested expensive `from pathlib import Path` import loop. Python set lookups O(1) combined with standard `os.path.basename` resulted in a >10x reduction in CPU time for the nested iteration loop.
+**Action:** Always watch out for list membership lookups on lists that can grow linearly inside deep nested loops (like XML parsing). Use Sets alongside the List to keep O(1) checks. Avoid calling `Path` simply for getting a base file name if `os.path.basename` works when called thousands of times.

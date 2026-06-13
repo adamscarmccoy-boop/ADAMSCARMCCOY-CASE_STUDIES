@@ -1,10 +1,12 @@
-import os
 import gzip
+import os
 import xml.etree.ElementTree as ET
+
 import pyarrow as pa
 import pyarrow.parquet as pq
 
 from app.config import settings
+
 
 def extract_and_index_session(input_path: str) -> str:
     """
@@ -52,14 +54,17 @@ def extract_and_index_session(input_path: str) -> str:
         plugin_lists.append(devices)
         
         sample_files = []
+        seen_samples = set()
         for sample_ref in track.findall(".//SampleRef"):
             rel_path_node = sample_ref.find(".//RelativePath")
             if rel_path_node is not None:
                 val = rel_path_node.get("Value")
                 if val:
-                    from pathlib import Path
-                    filename = Path(val).name
-                    if filename not in sample_files:
+                    # ⚡ Bolt Optimization: Use os.path.basename instead of nested pathlib import
+                    # and use a set for O(1) membership checking instead of O(N) list search.
+                    filename = os.path.basename(val)
+                    if filename not in seen_samples:
+                        seen_samples.add(filename)
                         sample_files.append(filename)
         referenced_samples.append(sample_files)
 
