@@ -1,0 +1,64 @@
+{
+    "folders": [
+        {
+            "path": "."
+        },
+        {
+            "path": "../data"
+        },
+        {
+            "path": "../../../Users/adams/Downloads"
+        }
+    ],
+    "settings": {
+        "python.pyrefly.diagnosticMode": "workspace",
+        "geminicodeassist.agentYoloMode": true,
+        "geminicodeassist.codeGenerationPaneViewEnabled": true,
+        "geminicodeassist.project": "legiondaw-87798",
+        "geminicodeassist.updateChannel": "Insiders",
+        "geminicodeassist.verboseLogging": true,
+        "geminicodeassist.inlineSuggestions.nextEditPredictions": true,
+        "windowsaistudio.enableRemoteFine-tuningAndInference": true,
+        "windowsaistudio.externalOpenAIProviders": [
+            "openai",
+            "ollama"
+        ],
+        "ollama.models": [
+            "codellama",
+            "llama3"
+        ],
+        "ollama.baseUrl": "http://localhost:11434",
+        "windowsaistudio.defaultModelSource": "ollama",
+        "windowsaistudio.defaultModel": "llama3",
+        "windowsaistudio.defaultModelProvider": "ollama",
+        "windowsaistudio.defaultModelTemperature": 0.7,
+        "windowsaistudio.defaultModelTopP": 0.9,
+        "windowsaistudio.defaultModelMaxTokens": 2048,
+        "windowsaistudio.defaultModelStopSequences": [
+            "<|eot_id|>"
+        ],
+        "windowsaistudio.defaultModelPresencePenalty": 0.0,
+        "windowsaistudio.defaultModelFrequencyPenalty": 0.0,
+        "windowsaistudio.defaultModelLogitBias": {},
+        "windowsaistudio.defaultModelResponseFormat": "text",
+        "windowsaistudio.defaultModelSeed": 0,
+        "windowsaistudio.defaultModelStream": true,
+        "windowsaistudio.defaultModelUser": "user"
+    },
+    "windowsaistudio.gpuFoundry.units": [
+        "onnx-cpu-optimized",
+        "directml-quantized"
+    ],
+    "windowsaistudio.backend.webgpu.enabled": true,
+    "windowsaistudio.localInference.agents": {
+        "count": 25,
+        "useOllama": false,
+        "preferredBackends": [
+            "webgpu",
+            "onnx",
+            "directml"
+        ]
+    },
+    "windowsaistudio.onnx.runtime": "local",
+    "windowsaistudio.modelOptimization.target": "cpu"
+}

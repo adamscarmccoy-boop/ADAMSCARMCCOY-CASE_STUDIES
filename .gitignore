@@ -1,0 +1,61 @@
+# Ignore local caching and session files
+lakehouse_data/
+raw_sessions/
+studio_reports/
+.env
+update_notebook_cache.py
+rebuild_notebook.py
+__pycache__/
+*.pyc
+
+# Environments
+.venv/
+.venv_old/
+
+# Caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.vector_cache/
+E_lancedb_store/
+lancedb_*/
+
+# Data and Media
+data/
+assets/
+*.wav
+*.mp3
+*.csv
+
+# --- MASSIVE REPO CLEANUP ---
+# Ignore all the junk exports and scratchpads you don't want
+exported_json/
+examples/
+docs/_astro/
+docs/pagefind/
+docs/design/
+docs/development/
+docs/essentials/
+docs/getting-started/
+docs/*.html
+docs/*.svg
+
+# Ignore scratch and backup notebooks
+*Copy*.html
+*Copy*.ipynb
+headless_audio_processing.html
+headless_audio_processing.ipynb
+session_intel_pipeline*.html
+session_intel_pipeline*.ipynb
+horn_interactive_cli.ipynb
+
+# Ignore scratch python scripts
+find_chris_lake.py
+master_batch.py
+vectorize_content.py
+rag_api.py
+main.py
+sovereign_schemas.py
+patch_notebook.py
+apply_fixes.py
+ask_antigravity.py
