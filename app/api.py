@@ -8,7 +8,6 @@ from app.extractor import extract_and_index_session
 
 logger = logging.getLogger(__name__)
 
-
 app = FastAPI(
     title="Ableton Session Intelligence Node",
     version="1.0.0",
