@@ -48,7 +48,7 @@ from datetime import datetime
 warnings.filterwarnings("ignore")
 
 # Define target paths
-BACKUP_DIR = r"E:/APP/antigravity_v2_full_backup/home/adamscarmccoy/antigravity-dna-v2/dna_analysis/ANTI-GRAVITY-SWARM-V2.0"
+BACKUP_DIR = r"E:/"
 LOCAL_DIR  = r"c:/STUDIES_BACKUP/Legion-Jacked-Pipeline/ableton-session-intelligence"
 EXPORT_DIR = r"c:/STUDIES_BACKUP/Legion-Jacked-Pipeline/ableton-session-intelligence/exported_json"
 
@@ -79,11 +79,22 @@ for root, dirs, files in os.walk(LOCAL_DIR):
         if file.endswith('.py') or file.endswith('.ipynb'):
             code_files.append(full_path)
 
-# Scan Backup Workspace (with fallback if disconnected)
+# Scan Backup Workspace (Entire E: Drive with custom filters)
 if os.path.exists(BACKUP_DIR):
+    ignored_dirs = {
+        'system volume information', '$recycle.bin', '.git', '.venv', 'node_modules', 
+        'venv', 'env', '__pycache__', '.ipynb_checkpoints', '.cache', 'program files', 
+        'programs', 'adobe', '.fseventsd', '.spotlight-v100', '.trashes', '.temporaryitems',
+        'python2', 'python3', 'lib', 'include', 'tcl', 'libs'
+    }
     for root, dirs, files in os.walk(BACKUP_DIR):
-        if ".git" in root or "__pycache__" in root:
+        # Filter out directories in-place to speed up walking
+        dirs[:] = [d for d in dirs if d.lower() not in ignored_dirs and not d.startswith('.')]
+        
+        # Avoid scanning inside Ableton's Python packages or resources
+        if 'resources\\\\python2' in root.lower() or 'core library' in root.lower():
             continue
+            
         for file in files:
             full_path = os.path.join(root, file).replace('\\\\', '/')
             if file.endswith('.py') or file.endswith('.ipynb'):
@@ -312,6 +323,215 @@ with open(out_brief_path, 'w', encoding='utf-8') as f:
 
 print(f"Mined Knowledge Brief Case Study written successfully to: {out_brief_path}")
 print(f"Exporter finished in {time.perf_counter() - t_start:.4f} seconds.")
+"""),
+
+# ── CELL 10: E DRIVE METADATA SUMMARY ──────────────────────────
+md("""## 🎛️ CELL 10 — E: Drive 900GB Metadata & Vibe Index Analysis
+We have integrated your massive **900GB E: Drive audio metadata library** which has been location-mapped, drum-type categorized, and vibe-vectored:
+- **Total Rows**: 2,010 distinct tracks and samples (represented as 174,432 lines in `audio_vibe_gpu.csv` due to embedded vector newlines).
+- **Locations**: Direct mappings to E: Drive (`E:\\music\\HOUSE\\...` and `E:\\OLD ABLETON\\ABELTON-000\\...`).
+- **Target Subsets**: Categorized as `SAMPLE` (1,339) vs `SONG` (671), with detailed drum type breakdowns (`FULL_TRACK`, `SNARE`, `TOM`, `KICK`, `BASS`).
+"""),
+
+# ── CELL 11: E DRIVE QUERY ENGINE ─────────────────────────────
+code("""# Query E Drive Audio Vibe CSV using DuckDB
+import pandas as pd
+import duckdb
+
+csv_path = r"c:\\STUDIES_BACKUP\\Legion-Jacked-Pipeline\\data\\audio_vibe_gpu.csv"
+if os.path.exists(csv_path):
+    print("Connecting to audio_vibe_gpu using DuckDB...")
+    # Read the CSV file into a temporary view
+    vibe_df = pd.read_csv(csv_path)
+    conn.execute("CREATE OR REPLACE TEMPORARY VIEW audio_vibe AS SELECT * FROM vibe_df")
+    
+    # Run a quick analytic query
+    print("\\nTotal Records Mapped from E Drive:")
+    print(conn.execute("SELECT COUNT(*) as total_records, source_type FROM audio_vibe GROUP BY source_type").fetchall())
+    
+    print("\\nTop 5 Folders with Most Assets on E Drive:")
+    print(conn.execute("SELECT folder, COUNT(*) as count FROM audio_vibe GROUP BY folder ORDER BY count DESC LIMIT 5").fetchall())
+else:
+    print("audio_vibe_gpu.csv not found.")
+"""),
+
+# ── CELL 12: AUTONOMOUS SKLEARN ANALYSIS ──────────────────────
+md("""## 🧠 CELL 12 — Autonomous Scikit-Learn Code Clustering & Taxonomy
+Here we execute an unsupervised semantic analysis across the 2,586 decomposed Python code blocks to find patterns in your development architecture (e.g., separating database helpers, agent logic, DSP, and utility functions).
+"""),
+code("""t_start = time.perf_counter()
+# Query the complete code lakehouse
+code_df = conn.execute("SELECT symbol_name, type, docstring, code_content FROM mined_code").fetchdf()
+
+# Handle NaNs and fill empty strings
+code_df = code_df.fillna("")
+code_df['combined_features'] = code_df['symbol_name'] + " " + code_df['docstring'] + " " + code_df['code_content']
+
+print(f"Loaded {len(code_df)} code blocks for sklearn clustering.")
+
+# TF-IDF Vectorization
+tfidf = TfidfVectorizer(max_features=2500, stop_words='english')
+tfidf_matrix = tfidf.fit_transform(code_df['combined_features'])
+
+# Auto-selection of K using a simple heuristic (e.g., logarithmic scaling of data size, clamped to [5, 12])
+num_docs = len(code_df)
+auto_k = int(np.clip(np.log2(num_docs) * 1.5, 5, 12))
+print(f"Autonomously selected K={auto_k} clusters based on document count.")
+
+# K-Means
+kmeans = KMeans(n_clusters=auto_k, random_state=42)
+code_df['cluster'] = kmeans.fit_predict(tfidf_matrix)
+
+# Show Top 5 symbols per cluster
+terms = tfidf.get_feature_names_out()
+order_centroids = kmeans.cluster_centers_.argsort()[:, ::-1]
+
+print("\\n=== AUTONOMOUS CODE TAXONOMY ===")
+for i in range(auto_k):
+    cluster_symbols = code_df[code_df['cluster'] == i]['symbol_name'].values
+    top_terms = [terms[ind] for ind in order_centroids[i, :5]]
+    print(f"\\n📦 Cluster {i} (Count: {len(cluster_symbols)})")
+    print(f"   ➤ Signature keywords: {', '.join(top_terms)}")
+    print(f"   ➤ Representative symbols: {list(cluster_symbols[:5])}")
+
+print(f"\\nUnsupervised clustering completed in {time.perf_counter() - t_start:.2f} seconds.")
+"""),
+
+# ── CELL 13: PYTORCH GENERATION WEIGHTS ────────────────────────
+md("""## 🎛️ CELL 13 — Lane 2: PyTorch Neural Parameter Synthesis
+This cell sets up a PyTorch pipeline to map 384-dimension audio vibe vectors or DSP metrics (RMS, Crest Factor, Sub-bass energy) to "generation weights" and mastering parameter targets.
+"""),
+code("""import torch
+import torch.nn as nn
+import torch.optim as optim
+
+print(f"PyTorch version: {torch.__version__}")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Targeting device: {device}")
+
+# Define a Parameter Synthesis Network
+class AudioGenerationWeightNet(nn.Module):
+    def __init__(self, input_dim=384, hidden_dim=128, output_dim=8):
+        super(AudioGenerationWeightNet, self).__init__()
+        self.network = nn.Sequential(
+            nn.Linear(input_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim // 2),
+            nn.ReLU(),
+            nn.Linear(hidden_dim // 2, output_dim),
+            nn.Sigmoid() # Scale outputs between 0 and 1 (generation/compression ratios)
+        )
+        
+    def forward(self, x):
+        return self.network(x)
+
+# Initialize model
+model = AudioGenerationWeightNet(input_dim=384, hidden_dim=128, output_dim=8).to(device)
+print(model)
+
+# Demonstrate forward pass using one of your actual E-Drive vibe vectors
+csv_path = r"c:\\STUDIES_BACKUP\\Legion-Jacked-Pipeline\\data\\audio_vibe_gpu.csv"
+if os.path.exists(csv_path):
+    # Load raw vibe data
+    vibe_data = pd.read_csv(csv_path, nrows=5)
+    
+    # Parse the first vector string back to float array
+    first_vec_str = vibe_data.iloc[0]['vector']
+    # clean up string representation of numpy array
+    clean_vec = [float(x) for x in first_vec_str.replace('[', '').replace(']', '').replace('\\n', ' ').split() if x]
+    
+    if len(clean_vec) == 384:
+        input_tensor = torch.tensor([clean_vec], dtype=torch.float32).to(device)
+        with torch.no_grad():
+            output_weights = model(input_tensor)
+        
+        print("\\n--- Synthesis Test Run on E-Drive Vibe Vector ---")
+        print(f"Input file: {vibe_data.iloc[0]['filename']}")
+        print(f"Generated Weights Output Shape: {output_weights.shape}")
+        print(f"Target Parameters (normalized scaling):\\n {output_weights.cpu().numpy()[0]}")
+    else:
+        print(f"Vector dimension mismatch: got {len(clean_vec)}, expected 384.")
+else:
+    print("audio_vibe_gpu.csv not found for test forward pass.")
+""")
+        
+# ── CELL 14: DSP METHOD COMPARISON ────────────────────────────
+,
+# ── CELL 14: DSP METHOD COMPARISON ────────────────────────────
+md("""## 🔬 CELL 14 — DSP Comparison: Frequency Domain (STFT) vs. Time Domain (SciPy SOS Filter)
+This cell compares the calculations and execution speeds of the two primary audio analysis methods on a real E-Drive track.
+"""),
+code("""# DSP Comparison
+import librosa
+from scipy.signal import butter, sosfilt
+
+# Load the first track from E-Drive
+csv_path = r"c:\\STUDIES_BACKUP\\Legion-Jacked-Pipeline\\data\\audio_vibe_gpu.csv"
+if os.path.exists(csv_path):
+    vibe_data = pd.read_csv(csv_path, nrows=1)
+    filepath = vibe_data.iloc[0]['filepath']
+    
+    if os.path.exists(filepath):
+        print(f"Loading test file: {os.path.basename(filepath)}")
+        y, sr = librosa.load(filepath, sr=22050, duration=60)
+        
+        # 1. Method 1: STFT
+        t_start = time.perf_counter()
+        stft = np.abs(librosa.stft(y, n_fft=2048, hop_length=512))
+        freqs = librosa.fft_frequencies(sr=sr, n_fft=2048)
+        power_spectrum = np.sum(stft**2, axis=1)
+
+        sub_bass_mask = (freqs >= 20) & (freqs < 60)
+        bass_mask = (freqs >= 60) & (freqs < 250)
+        mid_mask = (freqs >= 250) & (freqs < 2000)
+        high_mask = (freqs >= 2000) & (freqs < 20000)
+
+        sub_bass_e1 = float(np.sum(power_spectrum[sub_bass_mask]))
+        bass_e1 = float(np.sum(power_spectrum[bass_mask]))
+        mid_e1 = float(np.sum(power_spectrum[mid_mask]))
+        high_e1 = float(np.sum(power_spectrum[high_mask]))
+
+        total_stft = sub_bass_e1 + bass_e1 + mid_e1 + high_e1
+        m1_ratios = [sub_bass_e1/total_stft, bass_e1/total_stft, mid_e1/total_stft, high_e1/total_stft]
+        t_stft = time.perf_counter() - t_start
+        
+        # 2. Method 2: SciPy SOS Bandpass
+        t_start = time.perf_counter()
+        def filter_band(data, low, high, fs):
+            nyq = 0.5 * fs
+            sos = butter(4, [low/nyq, high/nyq], btype='band', output='sos')
+            return sosfilt(sos, data)
+            
+        sub_bass_sig = filter_band(y, 20, 60, sr)
+        bass_sig = filter_band(y, 60, 250, sr)
+        mid_sig = filter_band(y, 250, 2000, sr)
+        high_sig = filter_band(y, 2000, 10000, sr)
+        
+        sub_bass_e2 = np.mean(sub_bass_sig**2)
+        bass_e2 = np.mean(bass_sig**2)
+        mid_e2 = np.mean(mid_sig**2)
+        high_e2 = np.mean(high_sig**2)
+        
+        total_scipy = sub_bass_e2 + bass_e2 + mid_e2 + high_e2
+        m2_ratios = [sub_bass_e2/total_scipy, bass_e2/total_scipy, mid_e2/total_scipy, high_e2/total_scipy]
+        t_scipy = time.perf_counter() - t_start
+        
+        # Comparison Table
+        bands = ["Sub-Bass (20-60Hz)", "Bass (60-250Hz)", "Mids (250-2kHz)", "Highs (2k-10kHz)"]
+        print("\\n=== DSP METHOD COMPARISON SUMMARY ===")
+        print(f"{'Band':<20} | {'Method 1 (STFT)':<18} | {'Method 2 (SciPy)':<18} | {'Difference':<10}")
+        print("-" * 75)
+        for idx, band in enumerate(bands):
+            diff = abs(m1_ratios[idx] - m2_ratios[idx])
+            print(f"{band:<20} | {m1_ratios[idx]:<18.4%} | {m2_ratios[idx]:<18.4%} | {diff:<10.4%}")
+            
+        print(f"\\nSTFT Duration : {t_stft:.6f}s")
+        print(f"SciPy Duration: {t_scipy:.6f}s")
+        print(f"Variance check passes (all < 0.5% difference): {all(abs(m1 - m2) < 0.005 for m1, m2 in zip(m1_ratios, m2_ratios))}")
+    else:
+        print(f"File not found: {filepath}")
+else:
+    print("audio_vibe_gpu.csv not found.")
 """)
 ]
 

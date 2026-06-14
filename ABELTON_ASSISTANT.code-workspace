@@ -14,7 +14,7 @@
         "python.pyrefly.diagnosticMode": "workspace",
         "geminicodeassist.agentYoloMode": true,
         "geminicodeassist.codeGenerationPaneViewEnabled": true,
-        "geminicodeassist.project": "legiondaw-87798",
+        "geminicodeassist.project": "legiondawlocal",
         "geminicodeassist.updateChannel": "Insiders",
         "geminicodeassist.verboseLogging": true,
         "geminicodeassist.inlineSuggestions.nextEditPredictions": true,

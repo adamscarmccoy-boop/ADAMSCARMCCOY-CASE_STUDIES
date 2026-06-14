@@ -8,11 +8,59 @@
 
 The Legion-Jacked Pipeline is an advanced, full-stack autonomous audio intelligence platform designed to revolutionize music production and mastering workflows. Developed with a "Sovereign Edge" philosophy, this system operates entirely locally, ensuring zero data egress, maximum privacy, and unparalleled low-latency performance. It uniquely integrates multi-modal data processing, ranging from Python codebases and Ableton Live session metadata to high-resolution audio DSP features and external market intelligence. The pipeline employs a sophisticated blend of machine learning (RandomForest, IsolationForest, KMeans), deep learning (PyTorch, AudioCraft), and robust data engineering techniques (DuckDB, LanceDB, Parquet, Rust-powered Pydantic) to provide an AI-driven studio partner capable of performing complex analytical tasks, predicting market alignment, and iteratively mastering audio. This document details the architectural design, key innovations, and the engineering depth involved in building this cutting-edge platform.
 
+![Parallel Multi-Lane Intelligence Concept](C:/STUDIES_BACKUP/Legion-Jacked-Pipeline/ableton-session-intelligence/parallel_pipeline_concept.png)
+
 ---
 
 ## 1. System Architecture: A 5-Layer Sovereign Edge Design
 
 The Legion-Jacked Pipeline is structured as a resilient, five-layered architecture adhering to the **H.O.R.N. Stack** principles: **H**ardware-Optimized, **O**n-Demand/Offline, **R**eproducible, and **N**ative. This design ensures maximum performance, data privacy, and maintainability across the entire system.
+
+```mermaid
+graph TD
+    classDef layer fill:#13131f,stroke:#333344,stroke-width:2px,color:#fff;
+    classDef engine fill:#0d0d14,stroke:#00f0ff,stroke-width:1px,color:#fff;
+    
+    subgraph Layer5 ["Layer 5: Multi-Language Frontends"]
+        F1["React Dashboard (Vite + Framer Motion)"]
+        F2["Next.js Application (AudioVisualizer)"]
+        F3["Gemma Tuner (Three.js 3D Visualizer)"]
+    end
+    
+    subgraph Layer4 ["Layer 4: API & Tools (MCP Server)"]
+        A1["FastAPI Backend (66 Routes)"]
+        A2["Generic MCP Router (/tools/execute)"]
+    end
+    
+    subgraph Layer3 ["Layer 3: Machine Learning & Intelligence"]
+        M1["RandomForest (Artist Sound Style)"]
+        M2["IsolationForest (Anomaly Detection)"]
+        M3["KMeans + TF-IDF (Code Taxonomy)"]
+        M4["Radon / NetworkX (AST Complexity & Dependency)"]
+    end
+    
+    subgraph Layer2 ["Layer 2: Core Analytical Engines"]
+        E1["AutonomousLearningEngine"]
+        E2["SovereignEngine"]
+        E3["RateLimitedGPUClient"]
+    end
+    
+    subgraph Layer1 ["Layer 1: Local Persistent Storage"]
+        D1[("DuckDB (sonic_core_v2)")]
+        D2[("LanceDB (Vector Stores)")]
+        D3[("Parquet Lakehouse (Mined Code/Audio)")]
+        D4["Local Audio Assets (.wav / .als)"]
+    end
+
+    Layer5 --> Layer4
+    Layer4 --> Layer3
+    Layer3 --> Layer2
+    Layer2 --> Layer1
+    
+    class Layer1,Layer2,Layer3,Layer4,Layer5 layer;
+    class E1,E2,E3 engine;
+```
+
 
 #### 1.1 Data Sources & Persistent Storage
 
@@ -31,6 +79,25 @@ This decentralized, local-first data architecture is critical for the "Sovereign
 #### 1.2 Core Analytical Engines (The "God Classes")
 
 At the heart of the pipeline are several powerful Python classes, each serving as a specialized analytical engine. These "god classes" encapsulate significant functionality, reflecting a deep architectural design for modular and scalable operations:
+
+```mermaid
+flowchart LR
+    classDef engine fill:#0d0d14,stroke:#00f0ff,color:#fff;
+    classDef schema fill:#0d0d14,stroke:#ff3cac,color:#fff;
+
+    Parser["AbletonSessionParser (.als Parsing)"] -->|Extracts WAVs / VSTs| Pipeline["SovereignIntelligencePipeline"]
+    Pipeline -->|Validates Features| Schema["AlignedDSPTrackRecord (Pydantic Schema)"]
+    
+    Schema -->|Analyze & Diagnose| Engine["SovereignEngine (Pure Math Catalog Intelligence)"]
+    Schema -->|Compute Deltas| Delta["LiveTrackDelta (Dynamic Computed Fields)"]
+    
+    Engine -->|Market Scoring| Learner["AutonomousLearningEngine (24/7 Hit Predictor)"]
+    Learner -->|Triggers Prompts| GPU["RateLimitedGPUClient (Audiocraft / Gemma-4 Forge)"]
+    
+    class Engine,Learner,GPU,Pipeline engine;
+    class Schema,Delta schema;
+```
+
 
 *   **`AutonomousLearningEngine` (17,889 chars, 16 public methods):** This is the central AI brain responsible for 24/7 autonomous pattern recognition and hit prediction. It processes local catalog data, analyzes artist DNA, calculates market scores (using a 6-factor formula), and identifies top track predictions. Its methods orchestrate complex data flows between DuckDB, Parquet, and LanceDB for continuous learning.
 *   **`SovereignEngine` (16,013 chars, 6 public methods):** A pure mathematical catalog intelligence node, this engine performs multi-depth DSP analysis without any LLM dependencies. It offers functionalities like `analyze` (with configurable depth), `neighbors` (Euclidean distance searches), `diagnose` (for specific frequency bands), `release_ready` (for market alignment), and `session_start` (for project initialization).
@@ -54,6 +121,28 @@ The intelligence layer combines symbolic and statistical AI to derive actionable
 #### 1.4 API & Microservices Infrastructure
 
 The platform exposes a comprehensive set of APIs and tools, facilitating internal communication and external integration:
+
+```mermaid
+flowchart TD
+    classDef endpoint fill:#13131f,stroke:#333344,color:#fff;
+    classDef config fill:#0d0d14,stroke:#ffe600,color:#fff;
+    classDef engine fill:#0d0d14,stroke:#00f0ff,color:#fff;
+
+    Client["Frontend Client / LLM Agent"] -->|Tool Call Request| Router["POST /tools/execute"]
+    
+    Config[("mcp_config.json <br> Tool & Parameter Blueprints")] <-->|Loads Schemas & Enforces Parameters| Router
+    
+    Router -->|If 'query_duckdb'| Duck["DuckDB (sonic_core_v2)"]
+    Router -->|If 'query_lancedb'| Lance["LanceDB (Vector Search)"]
+    Router -->|If 'generate_audio'| Audio["Audiocraft / Gemma GPU"]
+    Router -->|If 'master_audio'| Pedal["Pedalboard Mastering Engine"]
+    Router -->|If 'run_workflow'| Graph["LangGraph Orchestrator"]
+    
+    class Router,Client endpoint;
+    class Config config;
+    class Duck,Lance,Audio,Pedal,Graph engine;
+```
+
 
 *   **FastAPI Backend:** Provides 66 distinct API routes across 12 Python files, enabling high-performance, asynchronous communication.
 *   **MCP (Model Context Protocol) Server (`mcp_server.py`, `mcp_api_server.py`):** Acts as the central AI agent interface, exposing 35 specialized tools. These tools encompass a wide range of capabilities, including:
@@ -84,10 +173,50 @@ The Legion-Jacked Pipeline is a testament to cutting-edge engineering practices 
 *   **Hybrid Multi-Modal Data Processing:** The seamless integration of relational (DuckDB), vector (LanceDB), and object (Parquet) stores for handling diverse data types—from raw code ASTs to high-resolution audio features—is a core innovation. This hybrid approach enables sophisticated cross-referencing and analysis that traditional single-database systems cannot achieve.
 *   **Sovereign Edge Deployment:** The unwavering commitment to a local-first, zero-data-egress architecture sets this platform apart. By utilizing Tailscale mesh networking, local Ollama LLM inference, and self-contained data stores, the system guarantees maximum data privacy, ultra-low latency, and independence from cloud service interruptions.
 *   **The "Pydantic Firewall": One Source of Truth for LLM Orchestration:** A critical innovation is the strategic use of LLMs (Phi-3, Gemini) solely for reasoning and orchestration, with their outputs strictly enforced by over 140 Pydantic schemas. This "Pydantic Firewall" technique serves as the One Source of Truth, eliminating LLM hallucinations and ensuring structured, reliable, and actionable insights crucial for automated production workflows.
+
+```mermaid
+flowchart LR
+    classDef firewall fill:#13131f,stroke:#ff4444,stroke-width:2px,color:#fff;
+    classDef data fill:#0d0d14,stroke:#00f0ff,color:#fff;
+    
+    RawData["Raw Audio Features / Mix Deltas"] -->|Enriched JSON| Adapter["Pydantic Adapter (Type Validation)"]
+    Adapter -->|Strict Prompt Injection| LLM["Ollama Phi-3 / Gemini API"]
+    
+    subgraph Firewall ["The Pydantic Firewall"]
+        LLM -->|Forced Output Constraint| Schema["SovereignDAWDiagnostic JSON Schema"]
+    end
+    
+    Schema -->|Parsed & Validated| Code["remediation_monologue (Direct DAW Actions)"]
+    
+    class Firewall,Schema firewall;
+    class Adapter,Code data;
+```
+
 *   **Parallel Multi-Lane Intelligence:** The pipeline successfully runs two distinct analytical lanes in parallel:
     *   **Code Lane:** Performs deep AST mining, code complexity analysis (Radon), semantic clustering (KMeans + TF-IDF), and dependency graphing (NetworkX) on Python code.
     *   **Music Lane:** Focuses on DSP feature extraction (Librosa), multi-class artist style classification (RandomForest), market trend analysis, and anomaly detection (IsolationForest) on audio data.
     *   These lanes operate independently but are orchestrated for a holistic understanding of the project.
+
+```mermaid
+flowchart TD
+    classDef lane fill:#13131f,stroke:#333344,color:#fff;
+    
+    subgraph CodeLane ["Code Lane (System Blueprint)"]
+        C1["AST Parser"] --> C2["KMeans / TF-IDF Semantics"]
+        C2 --> C3["NetworkX Imports Graph"]
+    end
+    
+    subgraph MusicLane ["Music Lane (Sonic DNA)"]
+        M1["Librosa DSP Analysis"] --> M2["RandomForest Style Predictor"]
+        M2 --> M3["ListenBrainz / Spotify Market Fusion"]
+    end
+    
+    CodeLane -->|Orchestrated Alignment| Conductor["LangGraph SystemMatrixConductor"]
+    MusicLane -->|Orchestrated Alignment| Conductor
+    
+    class CodeLane,MusicLane lane;
+```
+
 *   **GPU-Accelerated Workflows:** The integration of GPU/CUDA for high-performance audio generation via AudioCraft MusicGen and accelerated PyTorch DSP calculations ensures that resource-intensive tasks are offloaded efficiently, preventing system overloads (as demonstrated by the earlier system restarts and subsequent optimizations).
 *   **Robust Code Quality & Maintainability:** The proactive use of static analysis tools like Radon (e.g., identifying `mcp_api_server.py` as having critical technical debt with an MI of 1.2) reflects a commitment to building a maintainable and scalable codebase. This systematic approach ensures the long-term health and evolvability of the platform.
 
@@ -115,4 +244,4 @@ This project, the Legion-Jacked Pipeline, represents my comprehensive capabiliti
 > **Tech stack:** Python, Rust, TypeScript/React, FastAPI, DuckDB, LanceDB, scikit-learn, librosa, Pydantic, MCP, Gemini API, AudioCraft, Three.js, Next.js
 
 ---
-**[Architecture Map](./architecture_map.png)** *(Note: The image path provided is a local file path specific to the development environment. For external sharing, this image would be embedded or hosted.)*
+[Legion System Architecture](C:\STUDIES_BACKUP\Legion-Jacked-Pipeline\ableton-session-intelligence\legion_system_architecture.pngre_1781376533889.png)
