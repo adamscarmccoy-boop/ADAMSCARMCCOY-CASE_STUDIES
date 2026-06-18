@@ -14,11 +14,16 @@ This framework defines the baseline capabilities, architectural strengths, and p
     *   **Lane 3 (Audit):** Relational tracking of execution metrics and state logs.
 
 3.  **Hardware-Optimized Local Intelligence (Offline LLMs)**
-    *   Zero-egress, 100% data privacy workflows using local hardware (e.g., Ollama with models like `gemma:2b`).
+    *   Zero-egress, 100% data privacy workflows using local hardware (e.g., Ollama with models like `gemma:2b`, `phi3`).
     *   Neural A&R profiling: Evaluating relationships between physical audio attributes and web metrics without cloud round-trips.
+    *   Integration of DuckDB analytics tightly coupled with local LLM routing (e.g., Phi-3 engines).
 
 4.  **Cloud A/B Testing Capabilities**
     *   Side-by-side comparison of local models vs. cloud-grade models (e.g., Google Gemini via Antigravity SDK).
+
+5.  **Native File Extraction & API Engineering**
+    *   Expertise in binary ALS parsing and gzip XML unpacking for direct Ableton Live session data extraction.
+    *   Building high-performance APIs (e.g., FastAPI) to serve forensic-grade audio/session intelligence layers.
 
 ## Contract Preferences
 
