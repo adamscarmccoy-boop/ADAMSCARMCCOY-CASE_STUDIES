@@ -1,5 +1,9 @@
 # 🎛️ Ableton Session Intelligence & Web Intelligence Engine (H.O.R.N. Stack)
 
+**Author:** Adam McCoy
+**Contact:** Adamscarmccoy@gmail.com
+
+
 A forensic-grade, local-first session intelligence, audio mastering, and web metadata consolidation engine for Ableton Live projects and digital DSP audio processing. This project implements a **3-Lane Delta Architecture** using **PyArrow + Parquet + DuckDB** for the relational data lakehouse, and **LanceDB** for vector embeddings. The intelligence layer is powered by offline hardware-muzzled LLMs (via Ollama) and cloud-grade models (via the Antigravity SDK) for comprehensive side-by-side Neural A&R profiling.
 
 ---
@@ -159,3 +163,10 @@ jupyter nbconvert --to notebook --execute web_intel_pipeline.ipynb --inplace
 *   **Static Type Checking & Linting**: Strictly compliant with `mypy` and formatted via `ruff`.
 *   **Pre-commit Validation**: Enforced via hooks in `.pre-commit-config.yaml` to ensure clean, PEP8 compliant code blocks before commits.
 *   **Interoperability**: Completely compliant with Ableton Live files using native parsing libraries, requiring no external binary injection.
+
+---
+
+## 👤 Contact & Author
+
+**Author:** Adam McCoy
+**Email:** Adamscarmccoy@gmail.com
