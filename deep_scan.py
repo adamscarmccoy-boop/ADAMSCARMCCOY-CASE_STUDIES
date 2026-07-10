@@ -1,6 +1,9 @@
 """Deep scan: Rust + JS/TS + God class methods — all in one"""
-import sys, os, re
+import os
+import re
+import sys
 from collections import Counter
+
 import pandas as pd
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':

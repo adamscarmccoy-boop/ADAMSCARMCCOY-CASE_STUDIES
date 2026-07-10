@@ -1,11 +1,10 @@
 import json
-import os
-import duckdb
+from typing import List
+
+from dotenv import load_dotenv
 from google import genai
 from google.genai import types
-from pydantic import BaseModel, Field
-from typing import List
-from dotenv import load_dotenv
+from pydantic import BaseModel
 
 load_dotenv()
 

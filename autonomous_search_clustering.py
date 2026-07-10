@@ -6,10 +6,11 @@ Filters for the word AUTONOMOUS, then clusters with TF-IDF + auto-K KMeans.
 Exact pattern from Cell 12 of the notebook. Zero file scanning.
 """
 import sys
+
 import duckdb
 import numpy as np
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import KMeans
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 # Force UTF-8 stdout on Windows
 try:

@@ -1,10 +1,12 @@
-import os
 import gzip
+import os
 import xml.etree.ElementTree as ET
+
 import pyarrow as pa
 import pyarrow.parquet as pq
 
 from app.config import settings
+
 
 def extract_and_index_session(input_path: str) -> str:
     """

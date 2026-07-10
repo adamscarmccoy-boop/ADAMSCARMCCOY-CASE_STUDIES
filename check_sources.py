@@ -1,5 +1,8 @@
-import ast, os, duckdb, pandas as pd
-import numpy as np
+import ast
+import os
+
+import duckdb
+import pandas as pd
 
 LEGION_DIR   = r"c:/STUDIES_BACKUP/Legion-Jacked-Pipeline"
 PARQUET_PATH = r"c:/STUDIES_BACKUP/Legion-Jacked-Pipeline/ableton-session-intelligence/lakehouse_data/mined_code.parquet"

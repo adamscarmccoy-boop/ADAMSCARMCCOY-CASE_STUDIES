@@ -5,11 +5,12 @@ A stateful, multi-turn orchestrator that runs the Gemini API via the modern
 google-genai SDK inside a LangGraph workflow. Exposes local repo inspection tools.
 """
 
+import asyncio
+import operator
 import os
 import sys
-import asyncio
-from typing import Annotated, List, Literal, Dict, Any, Union
-import operator
+from typing import Annotated, Any, List, Literal, Union
+
 from dotenv import load_dotenv
 
 # Ensure stdout uses UTF-8 to prevent encoding crashes on Windows console
@@ -21,7 +22,7 @@ load_dotenv()
 
 from google import genai
 from google.genai import types
-from langgraph.graph import StateGraph, START, END
+from langgraph.graph import END, StateGraph
 from typing_extensions import TypedDict
 
 # ─── 1. TOOL DEFINITIONS ──────────────────────────────────────────────────────

@@ -1,12 +1,12 @@
-import json
-import httpx
 import os
 import time
+from typing import Dict, List
+
+import httpx
 import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
 from dotenv import load_dotenv
-from typing import List, Dict, Optional
-from pydantic import BaseModel, Field, computed_field
+from pydantic import BaseModel, computed_field
+from spotipy.oauth2 import SpotifyClientCredentials
 
 load_dotenv('c:/STUDIES_BACKUP/Legion-Jacked-Pipeline/ableton-session-intelligence/.env')
 

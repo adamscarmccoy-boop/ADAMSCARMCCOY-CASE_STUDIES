@@ -3,13 +3,17 @@ chris_lake_fire_test.py  — v2
 Multi-source: Spotify Albums + MusicBrainz + Discogs cross-verification
 All free/available endpoints only.
 """
-import sys, os, json, time
+import os
+import sys
+import time
+
 sys.stdout.reconfigure(encoding='utf-8')
 
 import httpx
 import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
 from dotenv import load_dotenv
+from spotipy.oauth2 import SpotifyClientCredentials
+
 load_dotenv()
 
 sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
@@ -86,7 +90,7 @@ def musicbrainz_data():
     recordings = r2.json().get("recordings", [])
 
     results = []
-    print(f"\nTop recordings with ISRCs:")
+    print("\nTop recordings with ISRCs:")
     for rec in recordings[:15]:
         isrcs = rec.get("isrcs", [])
         releases = rec.get("releases", [])
@@ -172,8 +176,8 @@ def build_vector_preview(spotify_releases, mb_recordings, genres, styles):
         print(f"  Embed text: {payload_text[:200]}...")
 
 if __name__ == "__main__":
-    print(f"CHRIS LAKE — MULTI-SOURCE FIRE TEST v2")
-    print(f"Spotify + MusicBrainz + Discogs")
+    print("CHRIS LAKE — MULTI-SOURCE FIRE TEST v2")
+    print("Spotify + MusicBrainz + Discogs")
     print()
 
     sp_releases                      = spotify_discography()

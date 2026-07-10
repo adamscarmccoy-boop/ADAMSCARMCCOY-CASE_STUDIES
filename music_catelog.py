@@ -9,12 +9,12 @@ OUTPUT:
 - music_readiness_report.md (what's ready to analyze)
 """
 
+import json
+from datetime import datetime
+
 import duckdb
 import pyarrow as pa
 import pyarrow.parquet as pq
-import json
-from pathlib import Path
-from datetime import datetime
 
 DATA_PATH = r"G:\My Drive\Google AI Studio\CODE\WORKSPACE\data"
 
@@ -172,7 +172,7 @@ def export_catalog(enriched_data):
                 by_artist[artist] = []
             by_artist[artist].append(track)
         
-        md_content = f"# 🎵 Music Catalog by Artist\n"
+        md_content = "# 🎵 Music Catalog by Artist\n"
         md_content += f"**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
         md_content += f"**Total Tracks**: {len(enriched_data)}\n"
         md_content += f"**Total Artists**: {len(by_artist)}\n\n"
@@ -218,10 +218,10 @@ def export_catalog(enriched_data):
         partial = [t for t in enriched_data if "PARTIAL" in t["readiness_status"]]
         incomplete = [t for t in enriched_data if "INCOMPLETE" in t["readiness_status"]]
         
-        report = f"# 🎯 Music Readiness Report\n"
+        report = "# 🎯 Music Readiness Report\n"
         report += f"**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
         
-        report += f"## Summary\n"
+        report += "## Summary\n"
         report += f"- 🟢 **Ready for Analysis**: {len(ready)} tracks ({len(ready)/len(enriched_data)*100:.1f}%)\n"
         report += f"- 🟡 **Partial Data**: {len(partial)} tracks ({len(partial)/len(enriched_data)*100:.1f}%)\n"
         report += f"- 🔴 **Incomplete**: {len(incomplete)} tracks ({len(incomplete)/len(enriched_data)*100:.1f}%)\n\n"
@@ -246,13 +246,13 @@ def export_catalog(enriched_data):
         
         if incomplete:
             report += f"## 🔴 Incomplete ({len(incomplete)} tracks)\n"
-            report += f"These tracks need DSP analysis or metadata enrichment.\n"
-            report += f"**Action**: Run audio feature extraction on these tracks.\n\n"
+            report += "These tracks need DSP analysis or metadata enrichment.\n"
+            report += "**Action**: Run audio feature extraction on these tracks.\n\n"
         
-        report += f"## Next Steps\n"
-        report += f"1. Prioritize 🟢 Ready tracks for immediate analysis\n"
-        report += f"2. Extract DSP metrics for 🟡 Partial tracks\n"
-        report += f"3. Full audio analysis for 🔴 Incomplete tracks\n"
+        report += "## Next Steps\n"
+        report += "1. Prioritize 🟢 Ready tracks for immediate analysis\n"
+        report += "2. Extract DSP metrics for 🟡 Partial tracks\n"
+        report += "3. Full audio analysis for 🔴 Incomplete tracks\n"
         
         with open(report_path, 'w') as f:
             f.write(report)

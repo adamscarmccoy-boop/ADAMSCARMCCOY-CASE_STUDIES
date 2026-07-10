@@ -5,22 +5,23 @@ Multi-class RandomForest + IsolationForest + Market Data Fusion
 + Full visual dashboard
 """
 import sys
+
 if sys.stdout.encoding.lower() != 'utf-8':
     try: sys.stdout.reconfigure(encoding='utf-8')
     except: pass
 
 # ── FOREST ENGINE CELL ──────────────────────────────────────────────────────
-import os, json
+import json
+from math import pi
+
+import matplotlib.gridspec as gridspec
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
-from matplotlib.patches import FancyArrowPatch
-from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.ensemble import RandomForestClassifier, IsolationForest
-from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
+from sklearn.ensemble import IsolationForest, RandomForestClassifier
+from sklearn.metrics import ConfusionMatrixDisplay, classification_report, confusion_matrix
 from sklearn.model_selection import cross_val_score
-from math import pi
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 # ── 1. LOAD DATA ─────────────────────────────────────────────────────────────
 FEATURES_PATH = r"c:/STUDIES_BACKUP/Legion-Jacked-Pipeline/ableton-session-intelligence/exported_json/duckdb_audio_features.json"

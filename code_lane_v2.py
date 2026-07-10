@@ -4,23 +4,28 @@ CODE LANE ENGINE v2 — YOUR CODE ONLY
 Filters out AI_Logs/pydantic, AI_Logs/instructor, site-packages
 Adds: NetworkX dependency graph, UMAP galaxy map, radon complexity, scipy dendrogram
 """
-import sys, os, ast, json, time
+import ast
+import os
+import sys
+import time
+
+import matplotlib
 import numpy as np
 import pandas as pd
-import matplotlib
+
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
-import networkx as nx
-from collections import Counter, defaultdict
+from collections import defaultdict
 from pathlib import Path
 
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.cluster import KMeans
-from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestClassifier, IsolationForest
-from scipy.cluster.hierarchy import linkage, dendrogram
+import matplotlib.gridspec as gridspec
+import matplotlib.pyplot as plt
+import networkx as nx
+from scipy.cluster.hierarchy import dendrogram, linkage
 from scipy.spatial.distance import pdist
+from sklearn.cluster import KMeans
+from sklearn.ensemble import IsolationForest
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.preprocessing import StandardScaler
 
 try:
     import umap
@@ -154,7 +159,7 @@ print(f"  YOUR code blocks: {len(df_blocks)}")
 # ═══════════════════════════════════════════════════════════════════════
 # PHASE 2: RADON COMPLEXITY (per file)
 # ═══════════════════════════════════════════════════════════════════════
-print(f"\nPHASE 2: Radon Complexity Analysis")
+print("\nPHASE 2: Radon Complexity Analysis")
 print("=" * 70)
 
 radon_results = []
@@ -183,7 +188,7 @@ if HAS_RADON:
         
         print(f"  Analyzed {len(df_radon)} files")
         worst = df_files.nlargest(10, 'max_cyclomatic')
-        print(f"\n  MOST COMPLEX FILES (highest cyclomatic complexity):")
+        print("\n  MOST COMPLEX FILES (highest cyclomatic complexity):")
         for _, r in worst.iterrows():
             print(f"    CC={r.get('max_cyclomatic',0):>3} MI={r.get('maintainability_index',0):>5.1f} | {r['filename']}")
 else:
@@ -192,7 +197,7 @@ else:
 # ═══════════════════════════════════════════════════════════════════════
 # PHASE 3: NETWORKX DEPENDENCY GRAPH
 # ═══════════════════════════════════════════════════════════════════════
-print(f"\nPHASE 3: NetworkX Dependency Graph")
+print("\nPHASE 3: NetworkX Dependency Graph")
 print("=" * 70)
 
 # Build file-to-file graph (only internal imports)
@@ -210,14 +215,14 @@ print(f"  Nodes: {G.number_of_nodes()}, Edges: {G.number_of_edges()}")
 if G.number_of_edges() > 0:
     pagerank = nx.pagerank(G, alpha=0.85)
     top_pr = sorted(pagerank.items(), key=lambda x: -x[1])[:15]
-    print(f"\n  PAGERANK — Most architecturally important files:")
+    print("\n  PAGERANK — Most architecturally important files:")
     for path, score in top_pr:
         print(f"    {score:.4f} | {path}")
 
     # Betweenness centrality — bridge files
     bc = nx.betweenness_centrality(G)
     top_bc = sorted(bc.items(), key=lambda x: -x[1])[:10]
-    print(f"\n  BETWEENNESS CENTRALITY — Bridge/connector files:")
+    print("\n  BETWEENNESS CENTRALITY — Bridge/connector files:")
     for path, score in top_bc:
         if score > 0:
             print(f"    {score:.4f} | {path}")
@@ -225,7 +230,7 @@ if G.number_of_edges() > 0:
 # ═══════════════════════════════════════════════════════════════════════
 # PHASE 4: TF-IDF + KMEANS + UMAP
 # ═══════════════════════════════════════════════════════════════════════
-print(f"\nPHASE 4: TF-IDF + KMeans + UMAP Galaxy")
+print("\nPHASE 4: TF-IDF + KMeans + UMAP Galaxy")
 print("=" * 70)
 
 df_blocks['combined'] = df_blocks['symbol_name'] + ' ' + df_blocks['docstring'] + ' ' + df_blocks['code_content']
@@ -251,7 +256,7 @@ for i in range(auto_k):
 # UMAP 2D projection
 umap_coords = None
 if HAS_UMAP and n_docs > 50:
-    print(f"\n  Running UMAP dimensionality reduction...")
+    print("\n  Running UMAP dimensionality reduction...")
     reducer = umap.UMAP(n_components=2, random_state=42, n_neighbors=15, min_dist=0.1)
     umap_coords = reducer.fit_transform(tfidf_matrix.toarray())
     df_blocks['umap_x'] = umap_coords[:, 0]
@@ -261,7 +266,7 @@ if HAS_UMAP and n_docs > 50:
 # ═══════════════════════════════════════════════════════════════════════
 # PHASE 5: CODE CLASSIFICATION
 # ═══════════════════════════════════════════════════════════════════════
-print(f"\nPHASE 5: Code Classification")
+print("\nPHASE 5: Code Classification")
 print("=" * 70)
 
 def classify_code(row):
@@ -301,7 +306,7 @@ df_blocks['code_outlier'] = iso.fit_predict(X_scaled) == -1
 # ═══════════════════════════════════════════════════════════════════════
 # PHASE 6: MEGA VISUAL DASHBOARD
 # ═══════════════════════════════════════════════════════════════════════
-print(f"\nPHASE 6: Visual Dashboard")
+print("\nPHASE 6: Visual Dashboard")
 print("=" * 70)
 
 PALETTE = ['#00f0ff','#ff3cac','#ffe600','#7dff8a','#ff6b35','#c77dff',

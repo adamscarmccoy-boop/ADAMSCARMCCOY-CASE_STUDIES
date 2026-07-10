@@ -1,7 +1,8 @@
-import pandas as pd
-import networkx as nx
-from pyvis.network import Network
 import os
+
+import networkx as nx
+import pandas as pd
+from pyvis.network import Network
 
 OUT_DIR = r"c:/STUDIES_BACKUP/Legion-Jacked-Pipeline/ableton-session-intelligence"
 PARQUET_IMPORTS = os.path.join(OUT_DIR, "lakehouse_data/code_imports_yours.parquet")

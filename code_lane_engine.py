@@ -5,20 +5,24 @@ Mines ALL .py files from Legion-Jacked-Pipeline
 Outputs: parquets, classification, dependency graph, visuals
 NO MUSIC. CODE ONLY.
 """
-import sys, os, ast, json, time, re
+import ast
+import os
+import sys
+import time
+
+import matplotlib
 import numpy as np
 import pandas as pd
-import matplotlib
-matplotlib.use('Agg')  # headless
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
-from collections import Counter, defaultdict
-from pathlib import Path
 
-from sklearn.feature_extraction.text import TfidfVectorizer
+matplotlib.use('Agg')  # headless
+from collections import defaultdict
+
+import matplotlib.gridspec as gridspec
+import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
+from sklearn.ensemble import IsolationForest, RandomForestClassifier
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestClassifier, IsolationForest
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
     try: sys.stdout.reconfigure(encoding='utf-8')
@@ -134,7 +138,7 @@ print(f"  Parse errors: {len(parse_errors)} files skipped")
 # ═══════════════════════════════════════════════════════════════════════
 # PHASE 2: SAVE PARQUETS
 # ═══════════════════════════════════════════════════════════════════════
-print(f"\nPHASE 2: Save Parquets")
+print("\nPHASE 2: Save Parquets")
 print("=" * 70)
 
 df_blocks = pd.DataFrame(blocks)
@@ -152,7 +156,7 @@ print(f"  code_file_stats.parquet:   {len(df_files)} files  ({os.path.getsize(fi
 # ═══════════════════════════════════════════════════════════════════════
 # PHASE 3: IMPORT DEPENDENCY GRAPH
 # ═══════════════════════════════════════════════════════════════════════
-print(f"\nPHASE 3: Import Dependency Analysis")
+print("\nPHASE 3: Import Dependency Analysis")
 print("=" * 70)
 
 # Flatten import graph
@@ -177,7 +181,7 @@ print(f"\n  code_import_graph.parquet: {len(df_imports)} edges")
 # ═══════════════════════════════════════════════════════════════════════
 # PHASE 4: TF-IDF + KMEANS CLUSTERING (full codebase)
 # ═══════════════════════════════════════════════════════════════════════
-print(f"\nPHASE 4: TF-IDF Clustering")
+print("\nPHASE 4: TF-IDF Clustering")
 print("=" * 70)
 
 df_blocks['combined'] = df_blocks['symbol_name'] + ' ' + df_blocks['docstring'] + ' ' + df_blocks['code_content']
@@ -205,7 +209,7 @@ for i in range(auto_k):
 # ═══════════════════════════════════════════════════════════════════════
 # PHASE 5: CODE CLASSIFICATION — RandomForest
 # ═══════════════════════════════════════════════════════════════════════
-print(f"\nPHASE 5: Code Block Classification (RandomForest)")
+print("\nPHASE 5: Code Block Classification (RandomForest)")
 print("=" * 70)
 
 # Label by keywords in symbol name / code
@@ -280,7 +284,7 @@ for _, r in anomaly_blocks.head(5).iterrows():
 # ═══════════════════════════════════════════════════════════════════════
 # PHASE 6: ARCHITECTURE SPINE — most connected files
 # ═══════════════════════════════════════════════════════════════════════
-print(f"\nPHASE 6: Architecture Spine")
+print("\nPHASE 6: Architecture Spine")
 print("=" * 70)
 
 # Files with most code blocks
@@ -306,14 +310,14 @@ dir_stats = df_files.groupby('directory').agg(
     avg_imports=('num_imports', 'mean'),
 ).sort_values('total_chars', ascending=False)
 
-print(f"\n  Top 10 directories by code volume:")
+print("\n  Top 10 directories by code volume:")
 for d, row in dir_stats.head(10).iterrows():
     print(f"    {row['total_chars']:>9} chars | {row['files']:>3} files | {row['total_lines']:>6} lines | {d}")
 
 # ═══════════════════════════════════════════════════════════════════════
 # PHASE 7: VISUAL DASHBOARD — CODE LANE
 # ═══════════════════════════════════════════════════════════════════════
-print(f"\nPHASE 7: Visual Dashboard")
+print("\nPHASE 7: Visual Dashboard")
 print("=" * 70)
 
 PALETTE = ['#00f0ff','#ff3cac','#ffe600','#7dff8a','#ff6b35','#c77dff',
@@ -442,9 +446,9 @@ print(f"  {auto_k} semantic clusters identified")
 print(f"  {len(role_counts)} code roles classified")
 print(f"  {df_blocks['code_outlier'].sum()} structural anomalies flagged")
 print(f"  {len(df_imports)} import edges mapped")
-print(f"\nParquets:")
+print("\nParquets:")
 print(f"  {enriched_path}")
 print(f"  {files_path}")
 print(f"  {imports_path}")
-print(f"\nDashboard:")
+print("\nDashboard:")
 print(f"  {dashboard_path}")
