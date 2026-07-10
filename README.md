@@ -159,7 +159,7 @@ jupyter nbconvert --to notebook --execute web_intel_pipeline.ipynb --inplace
 
 ## 🏗️ Professional Engineering Standards
 
-*   **Continuous Integration**: GitHub Actions configuration (`.github/workflows/python-app.yml`) running automated test checks.
+*   **Continuous Integration**: GitHub Actions configuration (`.github/workflows/ci.yml`) running automated test checks.
 *   **Static Type Checking & Linting**: Strictly compliant with `mypy` and formatted via `ruff`.
 *   **Pre-commit Validation**: Enforced via hooks in `.pre-commit-config.yaml` to ensure clean, PEP8 compliant code blocks before commits.
 *   **Interoperability**: Completely compliant with Ableton Live files using native parsing libraries, requiring no external binary injection.
