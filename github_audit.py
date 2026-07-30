@@ -1,6 +1,7 @@
-import httpx
-import sys
 import base64
+import sys
+
+import httpx
 
 sys.stdout.reconfigure(encoding='utf-8')
 
@@ -32,7 +33,7 @@ def check():
         if not runs:
             print("No workflow runs found yet. Actions may not have triggered.")
         for run in runs:
-            status = run.get("status")
+            run.get("status")
             conclusion = run.get("conclusion") or "in_progress"
             name = run.get("name")
             branch = run.get("head_branch")

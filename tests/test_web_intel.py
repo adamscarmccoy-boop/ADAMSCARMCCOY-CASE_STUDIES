@@ -1,26 +1,26 @@
-import pytest
 import os
-import json
-import tempfile
-import numpy as np
-import pyarrow as pa
-import pyarrow.parquet as pq
-import duckdb
-import lancedb
-from pydantic import ValidationError
-from sklearn.ensemble import RandomForestClassifier
 
 # Import the fusion engine from build_web_intel_notebook.py
 # (We can import it by loading the module dynamically or defining the test locally)
 # Let's import it dynamically to test the actual file code
 import sys
+import tempfile
+
+import duckdb
+import lancedb
+import numpy as np
+import pyarrow as pa
+import pyarrow.parquet as pq
+from sklearn.ensemble import RandomForestClassifier
+
 sys.path.append(os.path.abspath("."))
 try:
     from build_web_intel_notebook import WebDataFusionEngine
 except ImportError:
     # Fallback definition if run from outer scope
-    from pydantic import BaseModel, Field, computed_field
-    from typing import List, Dict
+    from typing import Dict, List
+
+    from pydantic import BaseModel, computed_field
     
     class WebDataFusionEngine(BaseModel):
         track_title: str

@@ -2,12 +2,15 @@
 spotify_probe.py
 Probes every relevant Spotify endpoint to see exactly what your app tier returns.
 """
-import sys, os, json
+import os
+import sys
+
 sys.stdout.reconfigure(encoding='utf-8')
 
 import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
 from dotenv import load_dotenv
+from spotipy.oauth2 import SpotifyClientCredentials
+
 load_dotenv()
 
 sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(

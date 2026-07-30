@@ -1,10 +1,12 @@
+import os
+
 import duckdb
 import ollama
 from jinja2 import Template
-import os
 
 from app.config import settings
 from app.schemas import Lane1DuckDBAnalytics
+
 
 def analyze_session_with_phi3(parquet_file_path: str, user_request: str) -> Lane1DuckDBAnalytics:
     """

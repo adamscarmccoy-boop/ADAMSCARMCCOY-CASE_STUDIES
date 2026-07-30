@@ -1,6 +1,7 @@
-import pandas as pd
-import networkx as nx
 import os
+
+import networkx as nx
+import pandas as pd
 
 OUT_DIR = r"c:/STUDIES_BACKUP/Legion-Jacked-Pipeline/ableton-session-intelligence"
 PARQUET_IMPORTS = os.path.join(OUT_DIR, "lakehouse_data/code_imports_yours.parquet")
@@ -30,7 +31,7 @@ try:
             print("  ...and more.")
     else:
         print("\n[+] No circular dependency interferences found. Data flow is strictly directional.")
-except Exception as e:
+except Exception:
     print("Could not calculate cycles.")
 
 # 2. Namespace Collisions (Duplicate function/class names across different files)
@@ -53,7 +54,7 @@ if 'block_name' in blocks_df.columns:
 in_degrees = dict(G.in_degree())
 sorted_bottlenecks = sorted(in_degrees.items(), key=lambda x: x[1], reverse=True)
 
-print(f"\n[!] Top 3 Architectural Bottlenecks (High Interference Risk if changed):")
+print("\n[!] Top 3 Architectural Bottlenecks (High Interference Risk if changed):")
 for node, degree in sorted_bottlenecks[:3]:
     print(f"  Module '{node}' is imported by {degree} other files.")
 

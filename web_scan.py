@@ -4,8 +4,10 @@ WEB LAYER SCAN — dig into the 40 Python files that touch frontend/web
 + map the API endpoints
 + find the MCP server tools
 """
-import sys, os, re, json
-from collections import Counter
+import json
+import os
+import re
+import sys
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
     try: sys.stdout.reconfigure(encoding='utf-8')
@@ -43,7 +45,7 @@ for method, path, fname, rel in sorted(routes, key=lambda x: x[1]):
 # ═══════════════════════════════════════════════════════════════════════
 # PART 2: MCP TOOLS — find all MCP server tool definitions
 # ═══════════════════════════════════════════════════════════════════════
-print(f"\n\nMCP SERVER TOOLS")
+print("\n\nMCP SERVER TOOLS")
 print("=" * 70)
 
 mcp_tools = []
@@ -72,7 +74,7 @@ for name, fname, rel in sorted(mcp_tools, key=lambda x: x[0]):
 # ═══════════════════════════════════════════════════════════════════════
 # PART 3: SONIC ARCHITECTURE FRAMEWORK — the React app
 # ═══════════════════════════════════════════════════════════════════════
-print(f"\n\nSONIC ARCHITECTURE FRAMEWORK (React)")
+print("\n\nSONIC ARCHITECTURE FRAMEWORK (React)")
 print("=" * 70)
 
 SAF_DIR = os.path.join(ROOT, "sonic-architecture-framework")
@@ -105,7 +107,7 @@ else:
 # ═══════════════════════════════════════════════════════════════════════
 # PART 4: FRONTEND DIR — Next.js app
 # ═══════════════════════════════════════════════════════════════════════
-print(f"\n\nFRONTEND (Next.js)")
+print("\n\nFRONTEND (Next.js)")
 print("=" * 70)
 
 FRONT_DIR = os.path.join(ROOT, "frontend")
@@ -135,7 +137,7 @@ else:
 # ═══════════════════════════════════════════════════════════════════════
 # PART 5: HTML PAGES — docs, dashboards
 # ═══════════════════════════════════════════════════════════════════════
-print(f"\n\nHTML PAGES")
+print("\n\nHTML PAGES")
 print("=" * 70)
 
 html_files = []
@@ -155,7 +157,7 @@ for size, name, path in sorted(html_files, key=lambda x: -x[0])[:15]:
 # ═══════════════════════════════════════════════════════════════════════
 # PART 6: NOTEBOOKS — all .ipynb
 # ═══════════════════════════════════════════════════════════════════════
-print(f"\n\nNOTEBOOKS")
+print("\n\nNOTEBOOKS")
 print("=" * 70)
 
 nb_files = []

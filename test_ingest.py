@@ -1,12 +1,10 @@
-import sys, os, json, time, warnings
+import warnings
+
 warnings.filterwarnings("ignore")
 
-import httpx
 import duckdb
 import lancedb
 import pyarrow as pa
-from dotenv import load_dotenv
-from pydantic import BaseModel, Field
 
 # We won't test Ollama here, just LanceDB + DuckDB I/O
 print(f"LanceDB version: {lancedb.__version__}")

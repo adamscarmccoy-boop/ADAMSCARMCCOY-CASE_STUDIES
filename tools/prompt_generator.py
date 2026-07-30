@@ -1,4 +1,6 @@
-import os, json, urllib.request
+import json
+import os
+import urllib.request
 
 OLLAMA_URL = os.environ.get('OLLAMA_URL', 'http://localhost:11434')
 MODEL = os.environ.get('LEGION_LLM', 'phi3:3.8b')

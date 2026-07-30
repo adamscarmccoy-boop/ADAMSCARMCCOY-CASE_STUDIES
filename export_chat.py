@@ -28,7 +28,7 @@ if os.path.exists(transcript_path):
                 # Only log USER and MODEL responses, system messages are usually just tool outputs
                 if source in ['USER', 'MODEL']:
                     html_content.append(f'<div class="{source}"><b>{source}</b><br><br>{content_html}</div>')
-            except Exception as e:
+            except Exception:
                 pass
 
 html_content.append("</body></html>")

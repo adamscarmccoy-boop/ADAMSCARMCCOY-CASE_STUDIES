@@ -2,10 +2,11 @@
 Ask Antigravity to review the Chat Export and Walkthrough,
 and generate a 3-page summary for the user's resume/portfolio.
 """
-import os, sys
+import sys
+
+from dotenv import load_dotenv
 from google import genai
 from google.genai import types
-from dotenv import load_dotenv
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
     try: sys.stdout.reconfigure(encoding='utf-8')

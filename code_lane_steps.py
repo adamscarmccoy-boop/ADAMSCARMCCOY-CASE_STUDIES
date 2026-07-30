@@ -4,16 +4,17 @@ CODE LANE — Step-by-step sklearn analysis
 Reads mined_code_yours.parquet (already built)
 Each step = its own Pydantic schema + its own sklearn pass
 """
-import sys, os, json
-import numpy as np
+import os
+import sys
+from typing import List
+
 import pandas as pd
-from pydantic import BaseModel, Field
-from typing import List, Optional, Dict
-from sklearn.feature_extraction.text import TfidfVectorizer
+from pydantic import BaseModel
 from sklearn.cluster import KMeans
-from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestClassifier, IsolationForest
+from sklearn.ensemble import IsolationForest, RandomForestClassifier
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import silhouette_score
+from sklearn.preprocessing import StandardScaler
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
     try: sys.stdout.reconfigure(encoding='utf-8')
@@ -159,7 +160,7 @@ print(f"\n  Total anomalies: {df['anomaly'].sum()} / {len(df)}")
 # ═══════════════════════════════════════════════════════════════════════
 # STEP 4: RandomForest — let the MODEL find the roles, not keywords
 # ═══════════════════════════════════════════════════════════════════════
-print(f"\nSTEP 4: RandomForest role classification")
+print("\nSTEP 4: RandomForest role classification")
 print("=" * 60)
 
 # Use cluster as the target — RF learns what structural features define each cluster
@@ -172,7 +173,7 @@ for feat, imp in sorted(zip(STRUCT, rf.feature_importances_), key=lambda x: -x[1
     print(f"    {feat:<16} {imp*100:>5.1f}%  {bar}")
 
 # Per-cluster structural profile
-print(f"\n  Cluster structural profiles:")
+print("\n  Cluster structural profiles:")
 print(f"  {'Cluster':>8} {'Size':>5} {'AvgLen':>8} {'AvgBranch':>10} {'AvgDepth':>9} {'AvgCalls':>9}")
 print(f"  {'-'*55}")
 role_results = []
@@ -190,7 +191,7 @@ for i in range(best.k):
 # ═══════════════════════════════════════════════════════════════════════
 # STEP 5: Assemble full report as Pydantic
 # ═══════════════════════════════════════════════════════════════════════
-print(f"\nSTEP 5: Pydantic Report Assembly")
+print("\nSTEP 5: Pydantic Report Assembly")
 print("=" * 60)
 
 report = CodeLaneReport(
@@ -211,4 +212,4 @@ with open(report_path, 'w', encoding='utf-8') as f:
 print(f"  Report saved: {report_path}")
 print(f"  {report.total_blocks} blocks | {report.total_files} files | K={report.optimal_k}")
 print(f"  {len(report.structural_anomalies)} anomalies | {len(report.clusters)} clusters")
-print(f"\nDone.")
+print("\nDone.")

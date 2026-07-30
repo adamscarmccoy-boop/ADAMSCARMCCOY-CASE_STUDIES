@@ -1,6 +1,7 @@
 import ast
-import os
 import glob
+import os
+
 import pandas as pd
 
 OUT_DIR = r"c:/STUDIES_BACKUP/Legion-Jacked-Pipeline/ableton-session-intelligence"
@@ -41,7 +42,7 @@ def extract_schemas_from_file(filepath):
                         "fields": " ".join(fields),
                         "num_fields": len(fields)
                     })
-    except Exception as e:
+    except Exception:
         pass
 
 for py_file in glob.glob(os.path.join(OUT_DIR, "**/*.py"), recursive=True):
