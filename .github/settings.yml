@@ -1,0 +1,10 @@
+repository:
+  description: "Low-Latency Production-Grade Audio Architecture & Signal Processing."
+  homepage: https://github.com/adamscarmccoy-boop
+  private: false
+  has_issues: true
+  has_projects: true
+  has_wiki: false
+  allow_squash_merge: true
+  allow_merge_commit: false
+  allow_rebase_merge: false
