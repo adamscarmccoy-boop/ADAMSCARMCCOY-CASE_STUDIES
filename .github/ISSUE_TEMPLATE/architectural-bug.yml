@@ -1,0 +1,29 @@
+name: "🚀 Architectural Consultation & Bug Report"
+description: "Report a production bottleneck, latency spike, or model breakdown."
+labels: ["architectural-audit", "bottleneck"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reaching out. Please provide the exact structural details of the pipeline bottleneck.
+  - type: input
+    id: environment
+    attributes:
+      label: Target Environment / Hardware Profile
+      placeholder: "e.g., iOS 17+, Apple Silicon M3, Local Edge Deployment"
+    validations:
+      required: true
+  - type: textarea
+    id: current-behavior
+    attributes:
+      label: Current Pipeline Behavior / Bottleneck
+      placeholder: "Describe the frame drops, memory leaks, or latency blocks you are observing."
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Target Metric / Production Goal
+      placeholder: "e.g., Must achieve sub-50ms local audio inference latency under thermal constraints."
+    validations:
+      required: true
