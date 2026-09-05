@@ -1,3 +1,11 @@
+---
+title: Technical Case Studies & Enterprise System Architecture Portfolio
+description: Diagnostic capability, system analysis, and engineering optimization case studies.
+keywords: [Software Architecture, Technical Consulting, Case Studies, System Design, Engineering Management, Performance Optimization]
+author: Adam Scar McCoy
+category: Software Architecture
+---
+
 # Technical Case Studies & System Architecture Portfolio
 
 > **High-impact architectural audits, latency reduction breakdowns, and enterprise engineering strategies.**
